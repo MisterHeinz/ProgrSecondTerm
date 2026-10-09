@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.4)
+cmake_minimum_required(VERSION 3.10) # Можно поставить 3.10 вместо 4.4 для совместимости
 project(DynamicArray)
 
 set(CMAKE_CXX_STANDARD 17)

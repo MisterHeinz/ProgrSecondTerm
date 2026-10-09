@@ -1,38 +1,50 @@
 #include <iostream>
 #include <cstring>
+#include <stdexcept>
+#include <cmath>
 #include "dynamic_array.h"
 
-bool DynamicArray::isValueInRange(int value){
-    if(value < MIN_VALUE || value > MAX_VALUE){
-        std::cout << "[set] Значение " << value << " не входит в диапазон [" << MIN_VALUE << " , " << MAX_VALUE << "]\n";
-        return false;
-    } 
-    return true;
+int DynamicArray::countAdditionElement(int a, int b) {
+    if (a + b > MAX_VALUE) {
+        return MIN_VALUE + (a + b - MAX_VALUE - 1);
+    }
+    return a + b;
 }
 
-bool DynamicArray::isIndexValid(int index){
-    if (index < 0 || index >= size) {
-        std::cout << "[get] Индекс " << index << " выходит за границы массива\n";
-        return false;
+int DynamicArray::countSubtractionNumber(int a, int b) {
+    if (a - b < MIN_VALUE) {
+        return MAX_VALUE - (MIN_VALUE - (a - b) - 1);
+    }
+    return a - b;
+}
+
+void DynamicArray::isValueInRange(int value) {
+    if (value < MIN_VALUE || value > MAX_VALUE) {
+        throw std::invalid_argument("Invalid argument");
     } 
-    return true;
+}
+
+void DynamicArray::isIndexValid(int index) {
+    if (index < 0 || index >= size) {
+        throw std::out_of_range("Invalid index");
+    } 
 }
 
 DynamicArray::DynamicArray(int array_size) {
     if (array_size < 0) {
-            array_size = 0;
+        array_size = 0;
     }
     size = array_size;
     capacity = array_size;
-    data = new int[capacity]{};
+    data = new int[capacity]{}; 
 }
 
-DynamicArray::DynamicArray(const DynamicArray& array_to_copy){
+DynamicArray::DynamicArray(const DynamicArray& array_to_copy) {
     size = array_to_copy.size;
     capacity = array_to_copy.capacity;
     data = new int[capacity]{};
 
-    for(int i = 0; i < size; ++i){
+    for (int i = 0; i < size; ++i) {
         data[i] = array_to_copy.data[i];
     }
 }
@@ -41,43 +53,36 @@ DynamicArray::~DynamicArray() {
     delete[] data;
 }
 
-bool DynamicArray::set(int index, int value) {
-    if (!isValueInRange(value) || !isIndexValid(index)) {
-        return false;
-    }
-
+void DynamicArray::set(int index, int value) {
+    isValueInRange(value);
+    isIndexValid(index);
     data[index] = value;
-    return true;
 }
 
 int DynamicArray::get(int index) {
-    if(!isIndexValid(index)) {
-        return MAX_VALUE+1;
-    }
+    isIndexValid(index);
     return data[index];
 }
 
-bool DynamicArray::pushBack(int value){
-    if (!isValueInRange(value)) {
-        return false;
-    }
+void DynamicArray::pushBack(int value) {
+    isValueInRange(value);
 
-    if(size >= capacity){
-        int new_capacity = (capacity == 0) ? 1 : capacity*2;
-        int* new_data = new int[new_capacity]{};
+    if (size >= capacity) {
+        int new_capacity = (capacity == 0) ? 1 : capacity * 2;
+        int* new_data = new int[new_capacity]{}; 
+        
         std::memcpy(new_data, data, size * sizeof(int));
         delete[] data;
         data = new_data;
         capacity = new_capacity;
     }
 
-    data[size]= value;
+    data[size] = value;
     size++;
-    return true;
 }
 
 void DynamicArray::print() {
-    std::cout << "Массив: [ ";
+    std::cout << "Array: [ ";
     for (int i = 0; i < size; ++i) {
         std::cout << data[i];
         if (i + 1 < size) {
@@ -87,22 +92,22 @@ void DynamicArray::print() {
     std::cout << " ]\n";
 }
 
-void DynamicArray::add(DynamicArray& other){
+void DynamicArray::add(DynamicArray& other) {
     for (int i = 0; i < size; ++i) {
         int other_value = 0;
         if (i < other.size) {
             other_value = other.data[i];
         }
-        data[i] += other_value;
+        data[i] = countAdditionElement(data[i], other_value);
     }
 }
 
-void DynamicArray::subtract(DynamicArray& other){
+void DynamicArray::subtract(DynamicArray& other) {
     for (int i = 0; i < size; ++i) {
         int other_value = 0;
         if (i < other.size) {
             other_value = other.data[i];
         }
-        data[i] -= other_value;
+        data[i] = countSubtractionNumber(data[i], other_value);
     }
 }
