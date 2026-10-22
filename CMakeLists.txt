@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.10) # Можно поставить 3.10 вместо 4.4 для совместимости
+cmake_minimum_required(VERSION 3.10)
 project(DynamicArray)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON) 
 
 add_executable(dynamic_array
     src/main.cpp
-    src/dynamic_array.cpp
 )
 
 target_include_directories(dynamic_array PRIVATE include)
