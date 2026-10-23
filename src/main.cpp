@@ -113,5 +113,45 @@ int main() {
     std::cout << "const size via iter = " << (ce - cb) << "\n";
     std::cout << "const cg[0] = " << cg[0] << "\n";
 
+    std::cout << std::endl << "TASK 5"  << std::endl;
+
+    DynamicArray<int> p(3);
+    p[0] = 1; p[1] = 2; p[2] = 3;
+    DynamicArray<int> q(1);
+    q = p;
+    std::cout << "array p: " << p << "\n";
+    std::cout << "array q = p: " << q << "\n";
+    std::cout << "q == p: " << (q == p) << "\n";
+
+    q = q;
+    std::cout << "q after q = q: " << q << "\n";
+
+    DynamicArray<int> r(1);
+    r = q = p;
+    std::cout << "r = q = p: " << r << "\n";
+
+    DynamicArray<int> src(3);
+    src[0] = 10; src[1] = 20; src[2] = 30;
+    std::cout << "array src: " << src << "\n";
+    DynamicArray<int> dst(std::move(src));
+    std::cout << "dst = move(src): " << dst << "\n";
+    std::cout << "src after move: " << src << "\n";
+
+    src.pushBack(7);
+    std::cout << "src after pushBack(7): " << src << "\n";
+
+    DynamicArray<int> m1(2);
+    m1[0] = 100; m1[1] = 50;
+    std::cout << "array m1: " << m1 << "\n";
+    DynamicArray<int> m2(1);
+    m2 = std::move(m1);
+    std::cout << "m2 = move(m1): " << m2 << "\n";
+    std::cout << "m1 after move: " << m1 << "\n";
+
+    m2 = std::move(m2);
+    std::cout << "m2 after m2 = move(m2): " << m2 << "\n";
+    m1.pushBack(42);
+    std::cout << "m1 after pushBack(42): " << m1 << "\n";
+
     return 0;
 }

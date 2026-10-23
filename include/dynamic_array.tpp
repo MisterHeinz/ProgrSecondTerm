@@ -215,3 +215,33 @@ DynamicArray<T>& DynamicArray<T>::operator-=(const T& scalar) {
         data[i] = countSubtractionNumber(data[i], scalar);
     return *this;
 }
+
+template <typename T>
+DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& other) {
+    if (this == &other) return *this;
+    DynamicArray<T> tmp(other);                       
+    std::swap(data, tmp.data);
+    std::swap(size, tmp.size);
+    std::swap(capacity, tmp.capacity);
+    return *this;
+}
+
+template <typename T>
+DynamicArray<T>::DynamicArray(DynamicArray<T>&& other) noexcept : data(other.data), size(other.size), capacity(other.capacity) {
+    other.data = nullptr;
+    other.size = 0;
+    other.capacity = 0;
+}
+
+template <typename T>
+DynamicArray<T>& DynamicArray<T>::operator=(DynamicArray<T>&& other) noexcept {
+    if (this == &other) return *this;                   
+    delete[] data;                                      
+    data = other.data;                              
+    size = other.size;
+    capacity = other.capacity;
+    other.data = nullptr;                           
+    other.size = 0;
+    other.capacity = 0;
+    return *this;
+}

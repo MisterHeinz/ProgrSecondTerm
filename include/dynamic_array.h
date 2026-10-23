@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstring>
 #include <typeinfo>
+#include <utility>
 
 template <typename T> class DynamicArray;
 template <typename T> std::ostream& operator<<(std::ostream& os, const DynamicArray<T>& arr);
@@ -48,7 +49,11 @@ public:
 
     DynamicArray(int array_size);
     DynamicArray(const DynamicArray& array_to_copy);
+    DynamicArray(DynamicArray&& other) noexcept;
     ~DynamicArray();
+
+    DynamicArray& operator=(const DynamicArray& other);       
+    DynamicArray& operator=(DynamicArray&& other) noexcept;
 
     void set(int index, const T& value);
     T get(int index) const;
