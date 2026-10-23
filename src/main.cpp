@@ -1,6 +1,8 @@
 #include "dynamic_array.h"
 
 int main() {
+    std::cout << std::endl << "TASK 3"  << std::endl;
+
     DynamicArray<int> a(3);
     a.set(0, 100); a.set(1, -100); a.set(2, 10);
 
@@ -45,6 +47,71 @@ int main() {
     } catch (const std::invalid_argument& e) {
         std::cerr << "distance: invalid_argument -> " << e.what() << "\n";
     }
+
+    std::cout << std::endl << "TASK 4"  << std::endl;
+
+    DynamicArray<int> c(3);
+    c[0] = 5; c[1] = -5; c[2] = 0;
+    std::cout << "c = " << c << "\n";
+    int first_c = c[0];
+    std::cout << "c[0] = " << first_c << "\n";
+    c[0] = c[1];
+    std::cout << "c after c[0] = c[1]: " << c << "\n";
+
+    try {
+        int bad = c[5];
+        std::cout << bad << "\n";
+    } catch (const std::out_of_range& e) {
+        std::cerr << "operator[]: out_of_range -> " << e.what() << "\n";
+    }
+
+    try {
+        c[0] = 1000;
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "operator[] set: invalid_argument -> " << e.what() << "\n";
+    }
+
+    DynamicArray<int> c2 = c;
+    std::cout << "DynamicArray c2 == c: " << c2 << "\n";
+    bool same = (c == c2);
+    std::cout << "c == c2: " << same << "\n";
+
+    c2[0] = 42;
+    std::cout << "change c2: " << c2 << "\n";
+    bool diff = (c != c2);
+    std::cout << "c != c2: " << diff << "\n";
+
+    DynamicArray<int> g = a;
+    DynamicArray<int> h(2);
+    h[0] = 5;
+    h[1] = 10;
+
+    std::cout << "DynamicArray g: " << g << "\n";
+    std::cout << "DynamicArray h: " << h << "\n";
+
+    g += h;
+    std::cout << "g += h: " << g << "\n";
+
+    g -= h;
+    std::cout << "g -= h: " << g << "\n";
+
+    g += 50;
+    std::cout << "g += 50: " << g << "\n";
+
+    g -= 50;
+    std::cout << "g -= 50: " << g << "\n";
+
+    int* first = g.begin();
+    int* last  = g.end();
+    std::cout << "first value = " << *first << "\n";           
+    std::cout << "size via iter = " << (last - first) << "\n";
+
+    const DynamicArray<int>& cg = g;
+    const int* cb = cg.begin();
+    const int* ce = cg.end();
+    std::cout << "const begin value = " << *cb << "\n";
+    std::cout << "const size via iter = " << (ce - cb) << "\n";
+    std::cout << "const cg[0] = " << cg[0] << "\n";
 
     return 0;
 }
