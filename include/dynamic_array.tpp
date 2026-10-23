@@ -25,7 +25,7 @@ T DynamicArray<T>::countSubtractionNumber(T a, T b) {
 }
 
 template <typename T>
-void DynamicArray<T>::isValueInRange(const T& value) {
+void DynamicArray<T>::isValueInRange(const T& value) const {
     if constexpr (std::is_integral_v<T>) {
         if (value < MIN_VALUE || value > MAX_VALUE) {
             throw std::invalid_argument("Invalid argument");
@@ -34,7 +34,7 @@ void DynamicArray<T>::isValueInRange(const T& value) {
 }
 
 template <typename T>
-void DynamicArray<T>::isIndexValid(int index) {
+void DynamicArray<T>::isIndexValid(int index) const {
     if (index < 0 || index >= size) {
         throw std::out_of_range("Invalid index");
     }
@@ -71,7 +71,7 @@ void DynamicArray<T>::set(int index, const T& value) {
 }
 
 template <typename T>
-T DynamicArray<T>::get(int index) {
+T DynamicArray<T>::get(int index) const{
     isIndexValid(index);
     return data[index];
 }
@@ -155,4 +155,63 @@ double distance(const DynamicArray<T>& a, const DynamicArray<T>& b) {
         }
         return std::sqrt(sum);
     }
+}
+
+template <typename T>
+typename DynamicArray<T>::Reference DynamicArray<T>::operator[](int index) {
+    isIndexValid(index);
+    return Reference(this, index);
+}
+
+template <typename T>
+const T& DynamicArray<T>::operator[](int index) const {
+    isIndexValid(index);
+    return data[index];
+}
+
+template <typename T>
+bool DynamicArray<T>::operator==(const DynamicArray<T>& other) const{
+    if (size != other.size) return false;
+    for (int i = 0; i < size; ++i)
+        if (!(data[i] == other.data[i])) return false;
+    return true;
+}
+
+template <typename T>
+bool DynamicArray<T>::operator!=(const DynamicArray<T>& other) const{
+    return !(*this == other);
+}
+
+template <typename T>
+DynamicArray<T>& DynamicArray<T>::operator+=(const DynamicArray<T>& other) {
+    for (int i = 0; i < size; ++i) {
+        T other_value = T{};                     
+        if (i < other.size) other_value = other.data[i];
+        data[i] = countAdditionElement(data[i], other_value);
+    }
+    return *this;
+}
+
+template <typename T>
+DynamicArray<T>& DynamicArray<T>::operator-=(const DynamicArray<T>& other) {
+    for (int i = 0; i < size; ++i) {
+        T other_value = T{};
+        if (i < other.size) other_value = other.data[i];
+        data[i] = countSubtractionNumber(data[i], other_value);
+    }
+    return *this;
+}
+
+template <typename T>
+DynamicArray<T>& DynamicArray<T>::operator+=(const T& scalar) {
+    for (int i = 0; i < size; ++i)
+        data[i] = countAdditionElement(data[i], scalar);
+    return *this;
+}
+
+template <typename T>
+DynamicArray<T>& DynamicArray<T>::operator-=(const T& scalar) {
+    for (int i = 0; i < size; ++i)
+        data[i] = countSubtractionNumber(data[i], scalar);
+    return *this;
 }

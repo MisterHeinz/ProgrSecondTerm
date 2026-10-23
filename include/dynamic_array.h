@@ -21,18 +21,65 @@ private:
     static const int MAX_VALUE = 100;
     T countAdditionElement(T a, T b);
     T countSubtractionNumber(T a, T b);
-    void isValueInRange(const T& value);
-    void isIndexValid(int index);
+    void isValueInRange(const T& value) const;
+    void isIndexValid(int index) const;
 public:
+    class Reference {
+    private:
+        DynamicArray<T>* array;
+        int index;
+    public:
+        Reference(DynamicArray<T>* arr, int i) : array(arr), index(i) {}
+
+        Reference& operator=(const T& value) {
+            array->set(index, value);
+            return *this;
+        }
+
+        Reference& operator=(const Reference& other) {
+            array->set(index, static_cast<T>(other));
+            return *this;
+        }
+
+        operator T() const { 
+            return array->get(index); 
+        }
+    };
+
     DynamicArray(int array_size);
     DynamicArray(const DynamicArray& array_to_copy);
     ~DynamicArray();
+
     void set(int index, const T& value);
-    T get(int index);
+    T get(int index) const;
     void pushBack(const T& value);
     void print();
     void add(const DynamicArray& other);
     void subtract(const DynamicArray& other);
+
+    Reference operator[](int index);
+    const T&  operator[](int index) const; 
+
+    bool operator==(const DynamicArray& other) const;
+    bool operator!=(const DynamicArray& other) const;
+
+    DynamicArray& operator+=(const DynamicArray& other); 
+    DynamicArray& operator-=(const DynamicArray& other);
+    DynamicArray& operator+=(const T& scalar);           
+    DynamicArray& operator-=(const T& scalar);
+
+    T* begin() { 
+        return data; 
+    }
+    T* end() { 
+        return data + size; 
+    }
+    const T* begin() const { 
+        return data; 
+    }
+    const T* end() const { 
+        return data + size; 
+    }
 
     template <typename U>
     friend std::ostream& operator<<(std::ostream& os, const DynamicArray<U>& arr);
